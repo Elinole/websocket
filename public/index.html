@@ -21,19 +21,33 @@
         <script>
             let user;
             let mySocket;
+            let isConnected = false;
             function connect() {
                 // TO IMPLEMENT
+                if (isConnected) return;
                 mySocket = new WebSocket('ws://localhost:3001');
 
                 mySocket.onopen = (event) => {
+                    isConnected = true;
                     console.info('WebSocket connection opened ', event);
                 };
 
                 mySocket.onclose = function (event) {
+                    isConnected = false;
                     console.info('WebSocket connection closed ', event);
                 };
                 mySocket.onerror = function (error) {
+                    isConnected = false;
                     console.info('WebSocket connection error ', error);
+                };
+
+                mySocket.onmessage = function (e) {
+                    try {
+                        const theMessage = JSON.parse(e.data);
+                        document.getElementsByClassName('chat-content')[0].innerHTML += "<div>["+theMessage.user+"] "+theMessage.message+"</div>";
+                    } catch (error) {
+                        console.log(error);
+                    }
                 };
 
             }
@@ -50,6 +64,11 @@
             function sendMessage() {
                 const message = document.getElementsByName('chat-message')[0].value;
                 // TO IMPLEMENT
+                mySocket.send(JSON.stringify({
+                    user: user,
+                    message: message
+                }));
+                
                 document.getElementsByName('chat-message')[0].value = '';
             }
         </script>
