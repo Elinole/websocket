@@ -6,8 +6,9 @@ wss.on('connection', webSocket => {
     console.log('connection established');
 
     webSocket.on('message', function(msgEvent){
-        console.log(msgEvent);
-        webSocket.send(msgEvent);
+        wss.clients.forEach(function each(client) {
+            client.send(msgEvent);
+        });
     });
 
     webSocket.send(JSON.stringify({
