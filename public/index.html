@@ -20,9 +20,22 @@
         </div>
         <script>
             let user;
-            let mySocket
+            let mySocket;
             function connect() {
                 // TO IMPLEMENT
+                mySocket = new WebSocket('ws://localhost:3001');
+
+                mySocket.onopen = (event) => {
+                    console.info('WebSocket connection opened ', event);
+                };
+
+                mySocket.onclose = function (event) {
+                    console.info('WebSocket connection closed ', event);
+                };
+                mySocket.onerror = function (error) {
+                    console.info('WebSocket connection error ', error);
+                };
+
             }
 
             function connectUser() {
@@ -42,5 +55,3 @@
         </script>
     </body>
 </html>
-
-;
